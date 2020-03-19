@@ -40,13 +40,17 @@ router.post("/login", async (req, res, next) => {
 		if (!passwordValid) {
 			return res.status(401).json(authError)
 		}
-		
+      /// What needs to happen here?
 		const  payload ={
 			userId: user.id,
-			role:'admin'
+			userRole:'normal' // This would normally come from a database.
 		}
+
+		const token = jwt.sign(payload, process.env.JWT_SECRET);
+
 		res.json({
 			message: `Welcome ${user.username}!`,
+			token: token
 		})
 	} catch(err) {
 		next(err)
