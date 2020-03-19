@@ -2,6 +2,7 @@ const express = require("express")
 const bcrypt = require("bcryptjs")
 const Users = require("../users/users-model")
 const restrict = require("../middleware/restrict")
+const jwt = require('jsonwebtoken');
 
 const router = express.Router()
 
@@ -39,7 +40,11 @@ router.post("/login", async (req, res, next) => {
 		if (!passwordValid) {
 			return res.status(401).json(authError)
 		}
-
+		
+		const  payload ={
+			userId: user.id,
+			role:'admin'
+		}
 		res.json({
 			message: `Welcome ${user.username}!`,
 		})
