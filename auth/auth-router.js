@@ -2,6 +2,7 @@ const express = require("express")
 const bcrypt = require("bcryptjs")
 const Users = require("../users/users-model")
 const restrict = require("../middleware/restrict")
+const jwt = require('jsonwebtoken');
 
 const router = express.Router()
 
@@ -39,9 +40,18 @@ router.post("/login", async (req, res, next) => {
 		if (!passwordValid) {
 			return res.status(401).json(authError)
 		}
+      /// What needs to happen here?
+		const  payload ={
+			userId: user.id,
+			userRole:'admin' // This would normally come from a database.
+		}
 
+		const token = jwt.sign(payload, process.env.JWT_SECRET);
+		res.setHeader('Set-Cookie', `token=${token}; path=/; httpOnly=true`);
+		// res.setHeader('Set-Cookie', `token=${authToken}; path=/`)
 		res.json({
 			message: `Welcome ${user.username}!`,
+			token: token
 		})
 	} catch(err) {
 		next(err)
