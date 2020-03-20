@@ -9,7 +9,7 @@ function restrict() {
 	
 	return async (req, res, next) => {
 		try {
-			const token = req.headers.authorization;
+			const {token} = req.cookies;
 			if(!token) res.status(401).json(authError);
 
 			// verify the token's signature
